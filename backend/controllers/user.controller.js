@@ -1,10 +1,9 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
-
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -35,7 +34,6 @@ export const register = async (req, res) => {
         console.log(error);
     }
 }
-
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -92,7 +90,6 @@ export const login = async (req, res) => {
         console.log(error);
     }
 };
-
 export const logout = async (_, res) => {
     try {
         return res.cookie("token", "", { maxAge: 0 }).json({
@@ -103,11 +100,10 @@ export const logout = async (_, res) => {
         console.log(error);
     }
 };
-
 export const getProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        let user = await User.findById(userId).populate({path:'posts', createdAt: -1}).populate('bookmarks');
+        let user = await User.findById(userId).populate({path:'posts', createdAt:-1}).populate('bookmarks').select('-password');
         return res.status(200).json({
             user,
             success: true
@@ -152,7 +148,6 @@ export const editProfile = async (req, res) => {
         console.log(error);
     }
 };
-
 export const getSuggestedUsers = async (req, res) => {
     try {
         const suggestedUsers = await User.find({ _id: { $ne: req.id } }).select("-password");
@@ -169,7 +164,6 @@ export const getSuggestedUsers = async (req, res) => {
         console.log(error);
     }
 };
-
 export const followOrUnfollow = async (req, res) => {
     try {
         const followKrneWala = req.id; // patel

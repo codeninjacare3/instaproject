@@ -1,37 +1,36 @@
-import useGetUserProfile from '@/hooks/useGetUserProfile';
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import useGetUserProfile from '@/hooks/useGetUserProfile';
 import { Link, useParams } from 'react-router-dom';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { AvatarImage } from '@radix-ui/react-avatar';
+import { useSelector } from 'react-redux';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { AtSign, Heart, MessageCircle } from 'lucide-react';
 
-function Profile() {
+const Profile = () => {
   const params = useParams();
   const userId = params.id;
   useGetUserProfile(userId);
   const [activeTab, setActiveTab] = useState('posts');
+
   const { userProfile, user } = useSelector(store => store.auth);
 
   const isLoggedInUserProfile = user?._id === userProfile?._id;
   const isFollowing = false;
 
   const handleTabChange = (tab) => {
-    setActiveTab(tab)
+    setActiveTab(tab);
   }
 
   const displayedPost = activeTab === 'posts' ? userProfile?.posts : userProfile?.bookmarks;
-  console.log(userProfile);
 
   return (
-    <div className='flex max-w-3xl justify-center mx-auto pl-10'>
+    <div className='flex max-w-5xl justify-center mx-auto pl-10'>
       <div className='flex flex-col gap-20 p-8'>
         <div className='grid grid-cols-2'>
           <section className='flex items-center justify-center'>
-            <Avatar className='h-32 w-32 items-center justify-center'>
-              <AvatarImage src={userProfile?.profilePicture} alt="profilePhoto"></AvatarImage>
+            <Avatar className='h-32 w-32'>
+              <AvatarImage src={userProfile?.profilePicture} alt="profilephoto" className="object-cover" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </section>
@@ -44,7 +43,7 @@ function Profile() {
                     <>
                       <Link to="/account/edit"><Button variant='secondary' className='hover:bg-gray-200 h-8'>Edit profile</Button></Link>
                       <Button variant='secondary' className='hover:bg-gray-200 h-8'>View archive</Button>
-                      <Button variant='secondary' className='hover:bg-gray-200 h-8'>Add tools</Button>
+                      <Button variant='secondary' className='hover:bg-gray-200 h-8'>Ad tools</Button>
                     </>
                   ) : (
                     isFollowing ? (
@@ -52,9 +51,8 @@ function Profile() {
                         <Button variant='secondary' className='h-8'>Unfollow</Button>
                         <Button variant='secondary' className='h-8'>Message</Button>
                       </>
-
                     ) : (
-                      <Button className='bg-[#0095f6] hover:bg-[3192d2] h-8'>Follow</Button>
+                      <Button className='bg-[#0095F6] hover:bg-[#3192d2] h-8'>Follow</Button>
                     )
                   )
                 }
@@ -65,14 +63,14 @@ function Profile() {
                 <p><span className='font-semibold'>{userProfile?.following.length} </span>following</p>
               </div>
               <div className='flex flex-col gap-1'>
-                <span className='font-semibold'>{userProfile.bio || 'Bio here...'}</span>
-                <Badge className='w-fit' variant='secondary'><AtSign /><span className='pl-1'>{userProfile?.username}</span></Badge>
+                <span className='font-semibold'>{userProfile?.bio || 'bio here...'}</span>
+                <Badge className='w-fit' variant='secondary'><AtSign /> <span className='pl-1'>{userProfile?.username}</span> </Badge>
               </div>
             </div>
           </section>
         </div>
         <div className='border-t border-t-gray-200'>
-          <div className='flex items-center justify-center text-sm gap-10'>
+          <div className='flex items-center justify-center gap-10 text-sm'>
             <span className={`py-3 cursor-pointer ${activeTab === 'posts' ? 'font-bold' : ''}`} onClick={() => handleTabChange('posts')}>
               POSTS
             </span>
@@ -83,7 +81,7 @@ function Profile() {
             <span className='py-3 cursor-pointer'>TAGS</span>
           </div>
           <div className='grid grid-cols-3 gap-1'>
-          {
+            {
               displayedPost?.map((post) => {
                 return (
                   <div key={post?._id} className='relative group cursor-pointer'>
@@ -104,13 +102,11 @@ function Profile() {
                 )
               })
             }
-                  </div>
+          </div>
         </div>
-        </div>
-
-
       </div>
-      )
+    </div>
+  )
 }
 
-      export default Profile
+export default Profile
